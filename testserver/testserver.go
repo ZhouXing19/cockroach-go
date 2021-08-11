@@ -56,10 +56,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cockroachdb/cockroach-go/v2/testserver/version"
 	// Import postgres driver.
 	_ "github.com/lib/pq"
-
-	"github.com/cockroachdb/cockroach-go/v2/testserver/version"
 )
 
 var customBinaryFlag = flag.String("cockroach-binary", "", "Use specified cockroach binary")
@@ -292,10 +291,14 @@ func NewTestServer(opts ...TestServerOpt) (TestServer, error) {
 		startCmd = "start"
 	}
 
+	logOpt := fmt.Sprintf("--log=\"{file-defaults: {dir: %s}, sinks: {stderr: {filter: NONE}}}\"", logDir)
+	//logOpt := "--log=\"{sinks: {stderr: {filter: INFO}}}\""
+
 	args := []string{
 		cockroachBinary,
 		startCmd,
-		"--logtostderr",
+		//"--logtostderr",
+		logOpt,
 		secureOpt,
 		"--host=localhost",
 		"--port=0",
